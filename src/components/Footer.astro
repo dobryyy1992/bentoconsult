@@ -1,0 +1,53 @@
+---
+import { ui, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const keys = ['team', 'technologies', 'industries', 'erp', 'contacts'] as const;
+---
+
+<footer class="bg-graphite/50 border-t border-white/5 mt-auto">
+  <div class="section-container py-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <a href={`/${lang}/`} class="flex items-center gap-2">
+          <img src="/images/logo.webp" alt="BentoConsult" class="h-8 w-auto" width="64" height="64" loading="lazy" decoding="async" />
+          <span class="text-xl font-bold tracking-tight">
+            <span class="text-logo-green">Bento</span><span class="text-white">Consult</span>
+          </span>
+        </a>
+        <p class="mt-3 text-sm text-gray-400 max-w-xs">{t.tagline}</p>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">{t.footerNav}</h3>
+        <ul class="space-y-2">
+          {keys.map((k) => (
+            <li>
+              <a href={`/${lang}/${k}`} class="text-sm text-gray-400 hover:text-cyan transition-colors duration-200">
+                {t.nav[k]}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">{t.footerContact}</h3>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="mailto:office@bento-health.com" class="hover:text-cyan transition-colors">office@bento-health.com</a></li>
+          <li><a href="tel:+359888702144" class="hover:text-cyan transition-colors">+359 88 870 2144</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-gray-500">
+      <p>{t.copyright}</p>
+      <p>{t.subtitle}</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,82 @@
+---
+import { ui, languages, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  page: string;
+}
+
+const { lang, page } = Astro.props;
+const nav = ui[lang].nav;
+const keys = ['home', 'erp', 'team', 'technologies', 'industries', 'contacts'] as const;
+const href = (k: string) => (k === 'home' ? `/${lang}/` : `/${lang}/${k}`);
+const pagePath = page === 'home' || page === '404' ? '' : page;
+
+const base = 'font-medium transition-colors duration-200';
+const active = 'text-cyan bg-cyan/10';
+const idle = 'text-gray-300 hover:text-white hover:bg-white/5';
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-navy/90 backdrop-blur-md border-b border-white/5">
+  <div class="section-container">
+    <nav class="flex items-center justify-between h-16 lg:h-20">
+      <a href={`/${lang}/`} class="flex items-center gap-2 shrink-0">
+        <img src="/images/logo.webp" alt="BentoConsult" class="h-8 w-auto" width="64" height="64" loading="lazy" decoding="async" />
+        <span class="text-xl font-bold tracking-tight">
+          <span class="text-logo-green">Bento</span><span class="text-white">Consult</span>
+        </span>
+      </a>
+
+      <div class="hidden lg:flex items-center gap-1">
+        {keys.map((k) => (
+          <a href={href(k)} class={`px-3 py-2 text-sm rounded-md ${base} ${page === k ? active : idle}`}>
+            {nav[k]}
+          </a>
+        ))}
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-0.5 bg-graphite rounded-lg p-0.5">
+          {languages.map((l) => (
+            <a
+              href={`/${l}/${pagePath}`}
+              class={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all duration-200 ${l === lang ? 'bg-cyan text-navy' : 'text-gray-400 hover:text-white'}`}
+            >
+              {l.toUpperCase()}
+            </a>
+          ))}
+        </div>
+
+        <button id="mobile-menu-btn" class="lg:hidden p-2 text-gray-300 hover:text-white transition-colors" aria-label="Toggle menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-white/5 bg-navy/95 backdrop-blur-md">
+    <div class="section-container py-4 space-y-1">
+      {keys.map((k) => (
+        <a href={href(k)} class={`block px-4 py-3 text-sm rounded-lg ${base} ${page === k ? active : idle}`}>
+          {nav[k]}
+        </a>
+      ))}
+    </div>
+  </div>
+</header>
+
+<div class="h-16 lg:h-20"></div>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const icon = document.getElementById('menu-icon');
+
+  btn?.addEventListener('click', () => {
+    const wasOpen = !menu?.classList.contains('hidden');
+    menu?.classList.toggle('hidden');
+    icon?.setAttribute('d', wasOpen ? 'M4 6h16M4 12h16M4 18h16' : 'M6 18L18 6M6 6l12 12');
+  });
+</script>
